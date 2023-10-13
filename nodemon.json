@@ -15,7 +15,8 @@
     "env": {
         "NODE_ENV": "development",
         "PORT": 3000,
-        "SESSION_SECRET": "secret"
+        "SESSION_SECRET": "somesecret",
+        "MONGO_URI": "mongodb+srv://sergskol:@cluster0.vtc6bew.mongodb.net/qa-advanced-node-and-express?retryWrites=true&w=majority"
     },
     "ext": "js,json,pug,css"
 }
