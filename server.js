@@ -23,37 +23,31 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-fccTesting(app); //For FCC testing purposes
+fccTesting(app); // For fCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.route('/').get((req, res) => {
-  res.render('index', { 
-    title: 'Hello', 
-    message: 'Please log in',
-    showLogin: true 
-  });
-});
-
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
 
+  // Be sure to change the title
   app.route('/').get((req, res) => {
+    //Change the response to render the Pug template
     res.render('index', {
       title: 'Connected to Database',
-      message: 'Please log in.',
+      message: 'Please login',
       showLogin: true
     });
   });
 
   app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
     res.redirect('/profile');
-  })
+  });
 
   app.route('/profile').get(ensureAuthenticated, (req,res) => {
-    res.render('profile');
-  })
+    res.render('profile', { username: req.user.username });
+  });
 
   passport.use(new LocalStrategy((username, password, done) => {
     myDataBase.findOne({ username: username }, (err, user) => {
@@ -64,7 +58,7 @@ myDB(async client => {
       return done(null, user);
     });
   }));
-  
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
@@ -87,8 +81,8 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect('/');
 };
-
+  
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log('Listening on port ' + PORT);
+  console.log(`Listening on port ${PORT}`);
 });
