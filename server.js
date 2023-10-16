@@ -50,7 +50,7 @@ io.use(
 );
 
 myDB(async client => {
-  const myDataBase = await client.db('database').collection('users');
+  const myDataBase = await client.db('qa-advanced-node-and-express').collection('users');
 
   routes(app, myDataBase);
   auth(app, myDataBase);
